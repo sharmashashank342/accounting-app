@@ -7,7 +7,7 @@
     <version>0.0.1</version>
 
     <name>account-service</name>
-    <description>Account Service Monolithic Application</description>
+    <description>Account Service Application</description>
     <packaging>jar</packaging>
 
     <properties>
