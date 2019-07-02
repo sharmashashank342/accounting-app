@@ -36,11 +36,4 @@ public class Account implements Serializable {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private Timestamp modifiedOn;
-
-    public Account(long accountId, long userId, BigDecimal balance, String currencyCode) {
-        this.accountId = accountId;
-        this.userId = userId;
-        this.balance = balance;
-        this.currencyCode = currencyCode;
-    }
 }

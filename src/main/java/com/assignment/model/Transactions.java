@@ -1,6 +1,8 @@
 package com.assignment.model;
 
+import com.assignment.enums.TransactionServiceType;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -23,4 +25,7 @@ public class Transactions implements Serializable {
     private Timestamp transactionDate;
 
     private BigDecimal amount;
+
+    @JsonIgnore
+    private TransactionServiceType serviceType;
 }

@@ -6,6 +6,7 @@ import com.assignment.data.managers.AccountsManager;
 import com.assignment.data.managers.AccountsManagerImpl;
 import com.assignment.data.managers.UserManagerImpl;
 import com.assignment.enums.Status;
+import com.assignment.enums.TransactionServiceType;
 import com.assignment.exception.BaseException;
 import com.assignment.exception.DBException;
 import com.assignment.model.Account;
@@ -268,6 +269,7 @@ public class AccountsManagerImplTest {
         assertThat(generatedTransaction.getSenderAccountId()).isEqualTo(transaction.getSenderAccountId());
         assertThat(generatedTransaction.getReceiverAccountId()).isEqualTo(transaction.getReceiverAccountId());
         assertThat(generatedTransaction.getTransactionId()).isNotBlank();
+        assertThat(generatedTransaction.getServiceType()).isEqualTo(TransactionServiceType.TRANSFER_FUND);
     }
 
     @Test

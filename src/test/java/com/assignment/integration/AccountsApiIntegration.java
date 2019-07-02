@@ -4,6 +4,7 @@ import com.assignment.BaseClass;
 import com.assignment.model.Account;
 import com.assignment.model.CreateTransactionRequest;
 import com.assignment.model.Transactions;
+import com.assignment.utils.AmountUtil;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
@@ -64,22 +65,36 @@ public class AccountsApiIntegration extends BaseClass {
     }
 
     @Test
-    public void testCreateAccount_Fail() throws IOException, URISyntaxException {
+    public void testCreateAccount_Fail_400() throws IOException, URISyntaxException {
         URI uri = builder.setPath("/accounts").build();
         HttpPost request = new HttpPost(uri);
         request.setHeader("Accept", "application/json");
         request.setHeader("Content-type", "application/json");
 
-//        Request JSON (Invalid User Id Exception)
-//        {
-//            "userId": 10,
-//                "currencyCode": "INR"
-//        }
+        Account account = new Account();
+        account.setUserId(8L);
+        account.setCurrencyCode(AmountUtil.DEFAULT_CURRENCY);
 
-        String bodyJson = "{\n" +
-                "\t\"userId\": 10,\n" +
-                "\t\"currencyCode\": \"INR\"\n" +
-                "}";
+        String bodyJson = mapper.writeValueAsString(account);
+
+        request.setEntity(new StringEntity(bodyJson, ContentType.APPLICATION_JSON));
+        HttpResponse response = client.execute(request);
+
+        assertThat(response.getStatusLine().getStatusCode()).isEqualTo(400);
+    }
+
+    @Test
+    public void testCreateAccount_Fail_404() throws IOException, URISyntaxException {
+        URI uri = builder.setPath("/accounts").build();
+        HttpPost request = new HttpPost(uri);
+        request.setHeader("Accept", "application/json");
+        request.setHeader("Content-type", "application/json");
+
+        Account account = new Account();
+        account.setUserId(10L);
+        account.setCurrencyCode(AmountUtil.DEFAULT_CURRENCY);
+
+        String bodyJson = mapper.writeValueAsString(account);
 
         request.setEntity(new StringEntity(bodyJson, ContentType.APPLICATION_JSON));
         HttpResponse response = client.execute(request);
@@ -94,16 +109,11 @@ public class AccountsApiIntegration extends BaseClass {
         request.setHeader("Accept", "application/json");
         request.setHeader("Content-type", "application/json");
 
-//        Request JSON (Invalid User Id Exception)
-//        {
-//            "userId": 10,
-//                "currencyCode": "INR"
-//        }
+        Account account = new Account();
+        account.setUserId(2L);
+        account.setCurrencyCode("some-non-valid-currency");
 
-        String bodyJson = "{\n" +
-                "\t\"userId\": 2,\n" +
-                "\t\"currencyCode\": \"some-non-valid-currency\"\n" +
-                "}";
+        String bodyJson = mapper.writeValueAsString(account);
 
         request.setEntity(new StringEntity(bodyJson, ContentType.APPLICATION_JSON));
         HttpResponse response = client.execute(request);
@@ -118,16 +128,11 @@ public class AccountsApiIntegration extends BaseClass {
         request.setHeader("Accept", "application/json");
         request.setHeader("Content-type", "application/json");
 
-//        Request JSON
-//        {
-//            "userId": 7,
-//                "currencyCode": "INR"
-//        }
+        Account accountRequest = new Account();
+        accountRequest.setUserId(7L);
+        accountRequest.setCurrencyCode(AmountUtil.DEFAULT_CURRENCY);
 
-        String bodyJson = "{\n" +
-                            "\t\"userId\": 7,\n" +
-                "\t\"currencyCode\": \"INR\"\n" +
-                "}";
+        String bodyJson = mapper.writeValueAsString(accountRequest);
 
         request.setEntity(new StringEntity(bodyJson, ContentType.APPLICATION_JSON));
         HttpResponse response = client.execute(request);

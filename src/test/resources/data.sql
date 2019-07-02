@@ -52,7 +52,8 @@ SenderAccountId LONG,
 ReceiverAccountId LONG,
 CreatedOn TIMESTAMP WITHOUT TIME ZONE,
 TransactionDate TIMESTAMP WITHOUT TIME ZONE,
-Amount DECIMAL(19,4)
+Amount DECIMAL(19,4),
+serviceType VARCHAR(20)
 );
 
 DROP TABLE IF EXISTS TransactionDetails;

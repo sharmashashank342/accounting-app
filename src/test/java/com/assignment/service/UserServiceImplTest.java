@@ -190,7 +190,6 @@ public class UserServiceImplTest {
     public void test_deleteUser() {
 
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        User user = getDummyUsers(timestamp, timestamp).get(0);
 
         when(userManager.deleteUser(anyLong())).thenReturn(1);
 

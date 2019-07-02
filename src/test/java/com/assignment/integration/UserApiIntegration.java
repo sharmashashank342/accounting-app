@@ -2,7 +2,9 @@ package com.assignment.integration;
 
 import com.assignment.BaseClass;
 import com.assignment.controller.RestController;
+import com.assignment.model.Account;
 import com.assignment.model.User;
+import com.assignment.utils.AmountUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpDelete;
@@ -102,16 +104,10 @@ public class UserApiIntegration extends BaseClass {
         request.setHeader("Accept", "application/json");
         request.setHeader("Content-type", "application/json");
 
-//        Request JSON
-//        {
-//            "userName": "",
-//            "emailAddress": "validEmail@gmail.com"
-//        }
+        User user = new User();
+        user.setEmailAddress("validEmail@gmail.com");
 
-        String bodyJson = "{\n" +
-                "\t\"userName\": \"\",\n" +
-                "\t\"emailAddress\": \"validEmail@gmail.com\"\n" +
-                "}";
+        String bodyJson = mapper.writeValueAsString(user);
 
         request.setEntity(new StringEntity(bodyJson, ContentType.APPLICATION_JSON));
         HttpResponse response = client.execute(request);
@@ -126,16 +122,10 @@ public class UserApiIntegration extends BaseClass {
         request.setHeader("Accept", "application/json");
         request.setHeader("Content-type", "application/json");
 
-//        Request JSON
-//        {
-//            "userName": "someUserName",
-//            "emailAddress": ""
-//        }
+        User user = new User();
+        user.setUserName("validName");
 
-        String bodyJson = "{\n" +
-                "\t\"userName\": \"someUserName\",\n" +
-                "\t\"emailAddress\": \"\"\n" +
-                "}";
+        String bodyJson = mapper.writeValueAsString(user);
 
         request.setEntity(new StringEntity(bodyJson, ContentType.APPLICATION_JSON));
         HttpResponse response = client.execute(request);
@@ -150,16 +140,11 @@ public class UserApiIntegration extends BaseClass {
         request.setHeader("Accept", "application/json");
         request.setHeader("Content-type", "application/json");
 
-//        Request JSON
-//        {
-//            "userName": "someUserName",
-//            "emailAddress": "usdhfuhfsdu"
-//        }
+        User user = new User();
+        user.setUserName("someUserName");
+        user.setEmailAddress("usdhfuhfsdu");
 
-        String bodyJson = "{\n" +
-                "\t\"userName\": \"someUserName\",\n" +
-                "\t\"emailAddress\": \"usdhfuhfsdu\"\n" +
-                "}";
+        String bodyJson = mapper.writeValueAsString(user);
 
         request.setEntity(new StringEntity(bodyJson, ContentType.APPLICATION_JSON));
         HttpResponse response = client.execute(request);
@@ -174,16 +159,11 @@ public class UserApiIntegration extends BaseClass {
         request.setHeader("Accept", "application/json");
         request.setHeader("Content-type", "application/json");
 
-//        Request JSON
-//        {
-//            "userName": "shashank",
-//            "emailAddress": "test@gmail.com"
-//        }
+        User user = new User();
+        user.setUserName("shashank");
+        user.setEmailAddress("test@gmail.com");
 
-        String bodyJson = "{\n" +
-                "\t\"userName\": \"shashank\",\n" +
-                "\t\"emailAddress\": \"test@gmail.com\"\n" +
-                "}";
+        String bodyJson = mapper.writeValueAsString(user);
 
         request.setEntity(new StringEntity(bodyJson, ContentType.APPLICATION_JSON));
         HttpResponse response = client.execute(request);
@@ -199,16 +179,11 @@ public class UserApiIntegration extends BaseClass {
         request.setHeader("Accept", "application/json");
         request.setHeader("Content-type", "application/json");
 
-//        Request JSON (Invalid Email Exception)
-//        {
-//            "userName": "newUser",
-//            "emailAddress": "shashank@gmail.com"
-//        }
+        User user = new User();
+        user.setUserName("newUser");
+        user.setEmailAddress("shashank@gmail.com");
 
-        String bodyJson = "{\n" +
-                "\t\"userName\": \"newUser\",\n" +
-                "\t\"emailAddress\": \"shashank@gmail.com\"\n" +
-                "}";
+        String bodyJson = mapper.writeValueAsString(user);
 
         request.setEntity(new StringEntity(bodyJson, ContentType.APPLICATION_JSON));
         HttpResponse response = client.execute(request);
@@ -224,16 +199,11 @@ public class UserApiIntegration extends BaseClass {
         request.setHeader("Accept", "application/json");
         request.setHeader("Content-type", "application/json");
 
-//        Request JSON
-//        {
-//            "userName": "newUser",
-//            "emailAddress": "newUser@gmail.com"
-//        }
+        User userRequest = new User();
+        userRequest.setUserName("newUser");
+        userRequest.setEmailAddress("newUser@gmail.com");
 
-        String bodyJson = "{\n" +
-                "\t\"userName\": \"newUser\",\n" +
-                "\t\"emailAddress\": \"newUser@gmail.com\"\n" +
-                "}";
+        String bodyJson = mapper.writeValueAsString(userRequest);
 
         request.setEntity(new StringEntity(bodyJson, ContentType.APPLICATION_JSON));
         HttpResponse response = client.execute(request);
@@ -257,16 +227,11 @@ public class UserApiIntegration extends BaseClass {
         request.setHeader("Accept", "application/json");
         request.setHeader("Content-type", "application/json");
 
-//        Request JSON
-//        {
-//            "userName": "newUser",
-//            "emailAddress": "newUser@gmail.com"
-//        }
+        User userRequest = new User();
+        userRequest.setUserName("newUser");
+        userRequest.setEmailAddress("newUser@gmail.com");
 
-        String bodyJson = "{\n" +
-                "\t\"userName\": \"newUser\",\n" +
-                "\t\"emailAddress\": \"newUser@gmail.com\"\n" +
-                "}";
+        String bodyJson = mapper.writeValueAsString(userRequest);
 
         request.setEntity(new StringEntity(bodyJson, ContentType.APPLICATION_JSON));
         HttpResponse response = client.execute(request);
@@ -281,16 +246,11 @@ public class UserApiIntegration extends BaseClass {
         request.setHeader("Accept", "application/json");
         request.setHeader("Content-type", "application/json");
 
-//        Request JSON
-//        {
-//            "userName": "newUser",
-//            "emailAddress": "newUser@gmail.com"
-//        }
+        User userRequest = new User();
+        userRequest.setUserName("newUser");
+        userRequest.setEmailAddress("newUser@gmail.com");
 
-        String bodyJson = "{\n" +
-                "\t\"userName\": \"newUser\",\n" +
-                "\t\"emailAddress\": \"newUser@gmail.com\"\n" +
-                "}";
+        String bodyJson = mapper.writeValueAsString(userRequest);
 
         request.setEntity(new StringEntity(bodyJson, ContentType.APPLICATION_JSON));
         HttpResponse response = client.execute(request);
@@ -305,16 +265,11 @@ public class UserApiIntegration extends BaseClass {
         request.setHeader("Accept", "application/json");
         request.setHeader("Content-type", "application/json");
 
-//        Request JSON
-//        {
-//            "userName": "non_account_user",
-//            "emailAddress": "non_account_user@gmail.com"
-//        }
+        User userRequest = new User();
+        userRequest.setUserName("non_account_user_new_name");
+        userRequest.setEmailAddress("non_account_user_new@gmail.com");
 
-        String bodyJson = "{\n" +
-                "\t\"userName\": \"non_account_user_new_name\",\n" +
-                "\t\"emailAddress\": \"non_account_user_new@gmail.com\"\n" +
-                "}";
+        String bodyJson = mapper.writeValueAsString(userRequest);
 
         request.setEntity(new StringEntity(bodyJson, ContentType.APPLICATION_JSON));
         HttpResponse response = client.execute(request);
@@ -374,7 +329,7 @@ public class UserApiIntegration extends BaseClass {
 
         assertThat(response.getStatusLine().getStatusCode()).isEqualTo(400);
 
-        // Wait for some time for Account to Deactivate
+        // Wait for some time for Account to Deactivate via event
         TimeUnit.SECONDS.sleep(2L);
 
         // Now Assert User Account Status Deactivation

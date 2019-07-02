@@ -2,6 +2,7 @@ package com.assignment.data.managers;
 
 import com.assignment.enums.Status;
 import com.assignment.enums.TransactionEntryType;
+import com.assignment.enums.TransactionServiceType;
 import com.assignment.exception.DBException;
 import com.assignment.model.Account;
 import com.assignment.model.CreateTransactionRequest;
@@ -14,7 +15,10 @@ import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.log4j.Logger;
 
 import java.math.BigDecimal;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.UUID;
 
 import static com.assignment.data.H2DBManager.getConnection;
@@ -30,7 +34,7 @@ public class AccountsManagerImpl implements AccountsManager {
 	private static final String SQL_UPDATE_ACC_BALANCE = "UPDATE Account SET Balance = ?, ModifiedOn = ? WHERE AccountId = ?";
 	private static final String SQL_DELETE_ACC = "UPDATE Account SET Status = ?, ModifiedOn = ? WHERE AccountId = ? AND Status='ACTIVE'";
 
-	private static final String SQL_CREATE_TXN = "INSERT INTO Transactions (TransactionId, SenderAccountId, ReceiverAccountId, CreatedOn, TransactionDate, Amount) VALUES (?, ?, ?, ?, ?, ?)";
+	private static final String SQL_CREATE_TXN = "INSERT INTO Transactions (TransactionId, SenderAccountId, ReceiverAccountId, CreatedOn, TransactionDate, Amount, ServiceType) VALUES (?, ?, ?, ?, ?, ?, ?)";
 	private static final String SQL_CREATE_TXN_DETAIL = "INSERT INTO TransactionDetails (TransactionDetailsId, TransactionId, AccountId, CreatedOn, SequenceNo, EntryType) VALUES (?, ?, ?, ?, ?, ?)";
 	private static final String SQL_GET_TXN = "SELECT * FROM Transactions WHERE TransactionId = ?";
 
@@ -95,7 +99,7 @@ public class AccountsManagerImpl implements AccountsManager {
 	}
 
 	/**
-	 * Transfer balance between two accounts.
+	 * Create Transaction between 2 Accounts
 	 */
 	@Override
 	public Transactions createAccountTransfer(CreateTransactionRequest createTransactionRequest) {
@@ -177,9 +181,10 @@ public class AccountsManagerImpl implements AccountsManager {
 			log.info("Txn initiated "+transactionId);
 
 			// New Txn
+			// TODO: take Txn serviceType from Request Param
 			new QueryRunner().insert(connection, SQL_CREATE_TXN, new BeanHandler<>(Transactions.class), transactionId,
 					createTransactionRequest.getSenderAccountId(), createTransactionRequest.getReceiverAccountId(),
-					timestamp, timestamp, createTransactionRequest.getAmount());
+					timestamp, timestamp, createTransactionRequest.getAmount(), TransactionServiceType.TRANSFER_FUND.name());
 
 
 			// Create Dual Pairs for Txn

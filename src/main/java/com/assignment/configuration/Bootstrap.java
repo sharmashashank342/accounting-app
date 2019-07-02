@@ -16,7 +16,7 @@ public class Bootstrap {
     static {
 
         try {
-            // Getting PID for Current Runnung Application
+            // Getting PID for Current Running Application
             String processInfo = ManagementFactory.getRuntimeMXBean().getName();
             int index = processInfo.indexOf('@');
             String pid = processInfo.substring(0, index);

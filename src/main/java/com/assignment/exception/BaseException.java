@@ -16,10 +16,6 @@ public class BaseException extends RuntimeException {
         this.statusCode = statusCode;
     }
 
-    public BaseException(String msg) {
-        super(msg);
-    }
-
     public int getStatusCode() {
         return statusCode;
     }
