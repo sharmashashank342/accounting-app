@@ -13,9 +13,6 @@ import java.math.BigDecimal;
 public class CreateTransactionRequest {
 
 	@JsonProperty(required = true)
-	private String currencyCode;
-
-	@JsonProperty(required = true)
 	private BigDecimal amount;
 
 	@JsonProperty(required = true)
