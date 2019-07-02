@@ -198,7 +198,7 @@ public class AccountsManagerImplTest {
             // default h2 timeout for acquire lock is 1sec
             BigDecimal transferAmount = BigDecimal.TEN;
 
-            CreateTransactionRequest transaction = new CreateTransactionRequest("GBP", transferAmount, 5L, 6L);
+            CreateTransactionRequest transaction = new CreateTransactionRequest(transferAmount, 5L, 6L);
 
             // Initiate Transfer to make it fail on Lock already acquired for sender Account
             Throwable throwable = catchThrowable(() -> accountsManager.createAccountTransfer(transaction));
@@ -229,7 +229,7 @@ public class AccountsManagerImplTest {
 
         BigDecimal transferAmount = new BigDecimal(50.22);
 
-        CreateTransactionRequest transaction = new CreateTransactionRequest("INR", transferAmount, 3L, 4L);
+        CreateTransactionRequest transaction = new CreateTransactionRequest(transferAmount, 3L, 4L);
 
         Account fromAccount = accountsManager.getAccountById(3L);
         Account toAccount = accountsManager.getAccountById(4L);
@@ -277,8 +277,8 @@ public class AccountsManagerImplTest {
         final CountDownLatch latch = new CountDownLatch(THREADS_COUNT);
 
         IntStream.rangeClosed(0, THREADS_COUNT)
-                .forEach(i -> createNewTransactionThread(latch, new CreateTransactionRequest("USD",
-                        BigDecimal.valueOf(2L), 1L, 2L)));
+                .forEach(i -> createNewTransactionThread(latch,
+                        new CreateTransactionRequest(BigDecimal.valueOf(2L), 1L, 2L)));
 
         latch.await();
 
@@ -316,8 +316,8 @@ public class AccountsManagerImplTest {
         final CountDownLatch latch = new CountDownLatch(THREADS_COUNT);
 
         IntStream.rangeClosed(0, THREADS_COUNT)
-                .forEach(i -> createNewTransactionThread(latch, new CreateTransactionRequest("USD",
-                        BigDecimal.valueOf(2L), 2L, 1L)));
+                .forEach(i -> createNewTransactionThread(latch,
+                        new CreateTransactionRequest(BigDecimal.valueOf(2L), 2L, 1L)));
 
         latch.await();
 

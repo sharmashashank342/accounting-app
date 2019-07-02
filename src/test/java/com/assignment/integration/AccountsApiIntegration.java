@@ -220,7 +220,7 @@ public class AccountsApiIntegration extends BaseClass {
     public void testTransactions_Success() throws IOException, URISyntaxException {
         URI uri = builder.setPath("/transactions").build();
         BigDecimal amount = BigDecimal.TEN;
-        CreateTransactionRequest transaction = new CreateTransactionRequest("INR", amount, 3L, 4L);
+        CreateTransactionRequest transaction = new CreateTransactionRequest(amount, 3L, 4L);
 
         String jsonInString = mapper.writeValueAsString(transaction);
         StringEntity entity = new StringEntity(jsonInString, ContentType.APPLICATION_JSON);
@@ -244,7 +244,7 @@ public class AccountsApiIntegration extends BaseClass {
     public void testTransactions_Fail_NotEnoughFund() throws IOException, URISyntaxException {
         URI uri = builder.setPath("/transactions").build();
         BigDecimal amount = BigDecimal.valueOf(100000L);
-        CreateTransactionRequest transaction = new CreateTransactionRequest("INR", amount, 3L, 4L);
+        CreateTransactionRequest transaction = new CreateTransactionRequest(amount, 3L, 4L);
 
         String jsonInString = mapper.writeValueAsString(transaction);
         StringEntity entity = new StringEntity(jsonInString, ContentType.APPLICATION_JSON);
@@ -261,7 +261,7 @@ public class AccountsApiIntegration extends BaseClass {
     public void testTransactions_Fails_DifferentCurrency() throws IOException, URISyntaxException {
         URI uri = builder.setPath("/transactions").build();
         BigDecimal amount = BigDecimal.ONE;
-        CreateTransactionRequest transaction = new CreateTransactionRequest("USD", amount, 1L, 4L);
+        CreateTransactionRequest transaction = new CreateTransactionRequest(amount, 1L, 4L);
 
         String jsonInString = mapper.writeValueAsString(transaction);
         StringEntity entity = new StringEntity(jsonInString, ContentType.APPLICATION_JSON);
