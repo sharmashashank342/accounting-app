@@ -40,7 +40,9 @@ public class Bootstrap {
 
     private static void ensureTestData() {
         log.info("Populating Test Data");
-        DBManager.getInstance().populateTestData();
+
+        Context.getContext().getDbManager().populateTestData();
+
         log.info("Data Initialisation Complete....");
     }
 
