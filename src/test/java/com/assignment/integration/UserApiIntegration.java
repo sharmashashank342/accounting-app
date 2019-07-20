@@ -322,8 +322,8 @@ public class UserApiIntegration extends BaseClass {
 
         assertThat(response.getStatusLine().getStatusCode()).isEqualTo(200);
 
-        // Verify Same User's Account Get should fail
-        uri = builder.setPath("/accounts/4").build();
+        // Verify Same User's Get should fail
+        uri = builder.setPath("/users/4").build();
         HttpGet getAccount = new HttpGet(uri);
         response = client.execute(getAccount);
 

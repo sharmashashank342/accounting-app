@@ -99,7 +99,7 @@ public class AccountsApiIntegration extends BaseClass {
         request.setEntity(new StringEntity(bodyJson, ContentType.APPLICATION_JSON));
         HttpResponse response = client.execute(request);
 
-        assertThat(response.getStatusLine().getStatusCode()).isEqualTo(400);
+        assertThat(response.getStatusLine().getStatusCode()).isEqualTo(404);
     }
 
     @Test
