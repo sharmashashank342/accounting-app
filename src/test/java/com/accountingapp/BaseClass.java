@@ -37,7 +37,7 @@ public abstract class BaseClass {
         // Initilize Server
         h2Dbmanager.populateTestData();
         startServer();
-        client= HttpClients.custom().build();
+        client = HttpClients.custom().build();
 
     }
 
