@@ -20,7 +20,7 @@
     </appender>
 
 
-    <logger name="com.assignment" additivity="false">
+    <logger name="com.accountingapp" additivity="false">
         <level value="DEBUG" />
         <appender-ref ref="CONSOLE" />
     </logger>
