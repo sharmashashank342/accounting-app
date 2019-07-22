@@ -72,11 +72,12 @@ public class AccountServiceImplTest {
 
 
         Account account = getDummyAccount();
+        AccountDTO accountDTO = getDummyAccountDTO();
 
         when(accountsManager.getAccountById(anyLong()))
                 .thenReturn(account);
 
-        assertThat(accountService.getAccountById(1L)).isEqualTo(account);
+        assertThat(accountService.getAccountById(1L)).isEqualTo(accountDTO);
 
         verify(accountsManager).getAccountById(1L);
     }
@@ -156,11 +157,12 @@ public class AccountServiceImplTest {
 
 
         Account account = getDummyAccount();
+        AccountDTO accountDTO = getDummyAccountDTO();
 
         when(accountsManager.getAccountByUserId(anyLong()))
                 .thenReturn(account);
 
-        assertThat(accountService.getAccountByUserId(1L)).isEqualTo(account);
+        assertThat(accountService.getAccountByUserId(1L)).isEqualTo(accountDTO);
 
         verify(accountsManager).getAccountByUserId(1L);
     }

@@ -25,21 +25,22 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Account getAccountById(long accountId) {
+    public AccountDTO getAccountById(long accountId) {
         Account account = Optional.ofNullable(accountsManager.getAccountById(accountId))
                 .orElseThrow(() -> new InvalidAccountIdException(accountId, Response.Status.NOT_FOUND.getStatusCode()));
 
         if (!activeAccounts.test(account)) {
             throw new InvalidAccountIdException(accountId);
         }
-        return account;
+
+        return convertToAccountDTO(account);
     }
 
     @Override
-    public AccountDTO createAccount(AccountDTO account) {
-        return Optional.of(accountsManager.createAccount(account))
-                .map(this::convertToAccountDTO)
-                .get();
+    public AccountDTO createAccount(AccountDTO accountDTO) {
+
+        Account account = accountsManager.createAccount(accountDTO);
+        return convertToAccountDTO(account);
     }
 
     private AccountDTO convertToAccountDTO(Account account) {
@@ -57,14 +58,14 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Account getAccountByUserId(long userId) {
+    public AccountDTO getAccountByUserId(long userId) {
         Account account = Optional.ofNullable(accountsManager.getAccountByUserId(userId))
                 .orElseThrow(() -> new InvalidUserIdException(userId, Response.Status.NOT_FOUND.getStatusCode()));
 
         if (!activeAccounts.test(account)) {
             throw new InvalidUserIdException(userId);
         }
-        return account;
+        return convertToAccountDTO(account);
     }
 
     @Override

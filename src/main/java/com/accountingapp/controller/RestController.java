@@ -6,7 +6,6 @@ import com.accountingapp.dto.CreateAccountParams;
 import com.accountingapp.dto.UserDTO;
 import com.accountingapp.events.service.EventService;
 import com.accountingapp.exception.InvalidRequestException;
-import com.accountingapp.model.Account;
 import com.accountingapp.model.CreateTransactionRequest;
 import com.accountingapp.model.Transactions;
 import com.accountingapp.model.User;
@@ -35,9 +34,12 @@ public class RestController {
 
     private final EventService eventService = Context.getContext().getEventService();
 
+    // Govern it Via Properties
+    private boolean useEventForAccountDeactivation = false;
+
     @GET
     @Path("/accounts/{accountId}")
-    public Account getAccount(@PathParam("accountId") long accountId) {
+    public AccountDTO getAccount(@PathParam("accountId") long accountId) {
         return accountService.getAccountById(accountId);
     }
 
@@ -86,7 +88,7 @@ public class RestController {
 
     @GET
     @Path("/accounts/users/{userId}")
-    public Account getAccountByUserId(@PathParam("userId") long userId) {
+    public AccountDTO getAccountByUserId(@PathParam("userId") long userId) {
         return accountService.getAccountByUserId(userId);
     }
 
@@ -137,7 +139,15 @@ public class RestController {
     public Response deleteUser(@PathParam("userId") long userId) {
 
         userService.deleteUser(userId);
-        eventService.raiseUserDeactivatedEvent(userId);
+
+        if (useEventForAccountDeactivation) {
+            eventService.raiseUserDeactivatedEvent(userId);
+        }else {
+
+            // Real Time Update
+            AccountDTO accountDTO = accountService.getAccountByUserId(userId);
+            accountService.deleteAccount(accountDTO.getAccountId());
+        }
 
         return Response.ok().build();
     }
@@ -146,9 +156,9 @@ public class RestController {
     @Path("/transactions")
     public Transactions createAccountTransfer(CreateTransactionRequest transactionRequest) {
 
-        Account fromAccount = accountService.getAccountById(transactionRequest.getSenderAccountId());
+        AccountDTO fromAccount = accountService.getAccountById(transactionRequest.getSenderAccountId());
 
-        Account toAccount = accountService.getAccountById(transactionRequest.getReceiverAccountId());
+        AccountDTO toAccount = accountService.getAccountById(transactionRequest.getReceiverAccountId());
 
         // Verifying Sender and Receiver to be Active
         Stream.of(fromAccount.getUserId(), toAccount.getUserId())

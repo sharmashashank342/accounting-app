@@ -22,7 +22,6 @@ public class Account implements Serializable {
 
     private long userId;
 
-    @JsonSerialize(using = AmountUtil.AmountSerializer.class)
     private BigDecimal balance;
 
     private String currencyCode;

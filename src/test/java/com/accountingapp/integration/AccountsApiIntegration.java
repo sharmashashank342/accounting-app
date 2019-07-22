@@ -47,7 +47,7 @@ public class AccountsApiIntegration extends BaseClass {
         assertThat(response.getStatusLine().getStatusCode()).isEqualTo(200);
         //check the content
         String jsonString = EntityUtils.toString(response.getEntity());
-        Account account = mapper.readValue(jsonString, Account.class);
+        AccountDTO account = mapper.readValue(jsonString, AccountDTO.class);
         assertThat(account.getUserId()).isEqualTo(1L);
         assertThat(setDisplayAmount(account.getBalance())).isEqualTo(setDisplayAmount(BigDecimal.valueOf(100)));
         assertThat(account.getCurrencyCode()).isEqualTo("USD");
@@ -185,7 +185,7 @@ public class AccountsApiIntegration extends BaseClass {
         assertThat(response.getStatusLine().getStatusCode()).isEqualTo(200);
         //check the content
         String jsonString = EntityUtils.toString(response.getEntity());
-        Account account = mapper.readValue(jsonString, Account.class);
+        AccountDTO account = mapper.readValue(jsonString, AccountDTO.class);
         assertThat(account.getUserId()).isEqualTo(1L);
         assertThat(setDisplayAmount(account.getBalance())).isEqualTo(setDisplayAmount(BigDecimal.valueOf(100)));
         assertThat(account.getCurrencyCode()).isEqualTo("USD");
