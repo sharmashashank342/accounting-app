@@ -28,15 +28,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class AccountsApiIntegration extends BaseClass {
 
     @Test
-    public void testGetAccountById_Fail_400() throws IOException, URISyntaxException {
-        URI uri = builder.setPath("/accounts/0").build();
-        HttpGet request = new HttpGet(uri);
-        HttpResponse response = client.execute(request);
-
-        assertThat(response.getStatusLine().getStatusCode()).isEqualTo(400);
-    }
-
-    @Test
     public void testGetAccountById_Fail_404() throws IOException, URISyntaxException {
         URI uri = builder.setPath("/accounts/100").build();
         HttpGet request = new HttpGet(uri);
@@ -148,16 +139,6 @@ public class AccountsApiIntegration extends BaseClass {
     }
 
     @Test
-    public void testDeleteAccount_Fails_non_valid_id() throws IOException, URISyntaxException {
-        URI uri = builder.setPath("/accounts/0").build();
-        HttpDelete request = new HttpDelete(uri);
-
-        HttpResponse response = client.execute(request);
-
-        assertThat(response.getStatusLine().getStatusCode()).isEqualTo(400);
-    }
-
-    @Test
     public void testDeleteAccount_Fails_not_found() throws IOException, URISyntaxException {
         URI uri = builder.setPath("/accounts/100").build();
         HttpDelete request = new HttpDelete(uri);
@@ -180,15 +161,6 @@ public class AccountsApiIntegration extends BaseClass {
         uri = builder.setPath("/accounts/6").build();
         HttpGet getAccount = new HttpGet(uri);
         response = client.execute(getAccount);
-
-        assertThat(response.getStatusLine().getStatusCode()).isEqualTo(400);
-    }
-
-    @Test
-    public void testGetAccountByUserId_Fail_400() throws IOException, URISyntaxException {
-        URI uri = builder.setPath("/accounts/users/0").build();
-        HttpGet request = new HttpGet(uri);
-        HttpResponse response = client.execute(request);
 
         assertThat(response.getStatusLine().getStatusCode()).isEqualTo(400);
     }

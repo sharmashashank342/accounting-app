@@ -218,25 +218,6 @@ public class UserApiIntegration extends BaseClass {
     }
 
     @Test
-    public void testUpdateUser_Fails_Invalid_Id() throws IOException, URISyntaxException {
-        URI uri = builder.setPath("/users/0").build();
-        HttpPut request = new HttpPut(uri);
-        request.setHeader("Accept", "application/json");
-        request.setHeader("Content-type", "application/json");
-
-        User userRequest = new User();
-        userRequest.setUserName("newUser");
-        userRequest.setEmailAddress("newUser@gmail.com");
-
-        String bodyJson = mapper.writeValueAsString(userRequest);
-
-        request.setEntity(new StringEntity(bodyJson, ContentType.APPLICATION_JSON));
-        HttpResponse response = client.execute(request);
-
-        assertThat(response.getStatusLine().getStatusCode()).isEqualTo(400);
-    }
-
-    @Test
     public void testUpdateUser_Fails_Not_Found_Id() throws IOException, URISyntaxException {
         URI uri = builder.setPath("/users/100").build();
         HttpPut request = new HttpPut(uri);
@@ -288,16 +269,6 @@ public class UserApiIntegration extends BaseClass {
         assertThat(user.getCreatedOn()).isNotNull().isToday();
         assertThat(user.getModifiedOn()).isToday();
 
-    }
-
-    @Test
-    public void testDeleteUser_Fails_non_valid_id() throws IOException, URISyntaxException {
-        URI uri = builder.setPath("/users/0").build();
-        HttpDelete request = new HttpDelete(uri);
-
-        HttpResponse response = client.execute(request);
-
-        assertThat(response.getStatusLine().getStatusCode()).isEqualTo(400);
     }
 
     @Test

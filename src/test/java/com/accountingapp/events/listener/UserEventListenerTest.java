@@ -46,7 +46,6 @@ public class UserEventListenerTest {
 
         verify(accountsManager, never()).getAccountById(1L);
         verify(accountsManager, never()).deleteAccount(1L);
-        assertThat(RestController.removeInactiveUser(1L)).isFalse();
     }
 
     @Test
@@ -70,6 +69,5 @@ public class UserEventListenerTest {
 
         verify(accountsManager).getAccountById(1L);
         verify(accountsManager).deleteAccount(1L);
-        assertThat(RestController.removeInactiveUser(1L)).isFalse();
     }
 }
