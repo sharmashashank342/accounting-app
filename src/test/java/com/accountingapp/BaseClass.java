@@ -35,7 +35,7 @@ public abstract class BaseClass {
     @Before
     public void setup() throws Exception {
         // Initilize Server
-        h2Dbmanager.populateTestData();
+        h2Dbmanager.populateData();
         startServer();
         client = HttpClients.custom().build();
 

@@ -51,7 +51,7 @@ public class AccountsManagerTest {
 
     @Before
     public void setup() {
-        h2Dbmanager.populateTestData();
+        h2Dbmanager.populateData();
         accountsManager = new AccountsManager();
     }
 

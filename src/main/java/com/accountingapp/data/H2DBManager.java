@@ -31,7 +31,7 @@ public class H2DBManager implements DBManager {
 	}
 
 	@Override
-	public void populateTestData() {
+	public void populateData() {
 		try(Connection conn = getConnection()) {
 			RunScript.execute(conn, new FileReader(TEST_DATA_SQL_FILE));
 		} catch (SQLException e) {

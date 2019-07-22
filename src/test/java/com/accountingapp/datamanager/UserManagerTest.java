@@ -29,7 +29,7 @@ public class UserManagerTest {
 
     @Before
     public void setup() {
-        h2Dbmanager.populateTestData();
+        h2Dbmanager.populateData();
         userManager = new UserManager();
     }
 
