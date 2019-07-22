@@ -34,8 +34,7 @@ public class RestController {
 
     private final EventService eventService = Context.getContext().getEventService();
 
-    // Govern it Via Properties
-    private boolean useEventForAccountDeactivation = false;
+    private boolean useEventForAccountDeactivation = Boolean.parseBoolean(Utils.getProperty("deactivate_account_via_event"));
 
     @GET
     @Path("/accounts/{accountId}")
@@ -143,7 +142,6 @@ public class RestController {
         if (useEventForAccountDeactivation) {
             eventService.raiseUserDeactivatedEvent(userId);
         }else {
-
             // Real Time Update
             AccountDTO accountDTO = accountService.getAccountByUserId(userId);
             accountService.deleteAccount(accountDTO.getAccountId());
