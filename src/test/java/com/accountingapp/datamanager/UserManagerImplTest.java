@@ -4,6 +4,7 @@ import com.accountingapp.data.DBManager;
 import com.accountingapp.data.H2DBManager;
 import com.accountingapp.data.managers.UserManager;
 import com.accountingapp.data.managers.UserManagerImpl;
+import com.accountingapp.dto.UserDTO;
 import com.accountingapp.enums.Status;
 import com.accountingapp.model.User;
 import org.junit.Before;
@@ -42,7 +43,6 @@ public class UserManagerImplTest {
         assertThat(users).extracting("userId").containsExactly(getAllPopulatedUsers().stream().map(User::getUserId).toArray());
         assertThat(users).extracting("userName").containsExactly(getAllPopulatedUsers().stream().map(User::getUserName).toArray());
         assertThat(users).extracting("emailAddress").containsExactly(getAllPopulatedUsers().stream().map(User::getEmailAddress).toArray());
-        assertThat(users).extracting("status").containsExactly(getAllPopulatedUsers().stream().map(User::getStatus).toArray());
 
         Optional<Timestamp> timestamp = users.stream().map(User::getCreatedOn).sorted().findFirst();
         timestamp.ifPresent(timestamp1 ->  assertThat(timestamp1).isToday());
@@ -75,26 +75,25 @@ public class UserManagerImplTest {
     @Test
     public void test_createUser() {
 
-        User user = new User();
+        UserDTO user = new UserDTO();
         user.setUserName("userName");
         user.setEmailAddress("useremail@gmail.com");
-        user.setStatus(Status.ACTIVE);
 
         User newUser = userManager.createUser(user);
-        assertThat(newUser).isEqualToIgnoringGivenFields(user, "userId", "createdOn");
+        assertThat(newUser).isEqualToIgnoringGivenFields(user, "userId", "status", "createdOn");
         assertThat(newUser.getCreatedOn()).isToday();
     }
 
     @Test
     public void test_updateUser_when_No_User_By_Id() {
 
-        assertThat(userManager.updateUser(100L, new User())).isZero();
+        assertThat(userManager.updateUser(100L, new UserDTO())).isZero();
     }
 
     @Test
     public void test_updateUser() {
 
-        User user = new User();
+        UserDTO user = new UserDTO();
         user.setUserName("newUserName");
         user.setEmailAddress("newEmail@gmail.com");
 

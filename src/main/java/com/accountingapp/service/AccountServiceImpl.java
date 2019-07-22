@@ -1,13 +1,14 @@
 package com.accountingapp.service;
 
 import com.accountingapp.data.managers.AccountsManager;
+import com.accountingapp.dto.AccountDTO;
 import com.accountingapp.enums.Status;
 import com.accountingapp.exception.InvalidAccountIdException;
-import com.accountingapp.exception.InvalidRequestException;
 import com.accountingapp.exception.InvalidUserIdException;
 import com.accountingapp.model.Account;
 import com.accountingapp.model.CreateTransactionRequest;
 import com.accountingapp.model.Transactions;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.ws.rs.core.Response;
 import java.util.Optional;
@@ -35,13 +36,18 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Account createAccount(Account account) {
-        return accountsManager.createAccount(account);
+    public AccountDTO createAccount(AccountDTO account) {
+        return Optional.of(accountsManager.createAccount(account))
+                .map(this::convertToAccountDTO)
+                .get();
     }
 
+    private AccountDTO convertToAccountDTO(Account account) {
+        return new ObjectMapper().convertValue(account, AccountDTO.class);
+    }
 
     @Override
-    public void deleteAccount(long accountId) throws InvalidRequestException {
+    public void deleteAccount(long accountId) {
         int deleteCount = accountsManager.deleteAccount(accountId);
 
         // Delete Count Can't Exceed 1 as account Id is primary key

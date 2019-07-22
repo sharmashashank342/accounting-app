@@ -1,6 +1,7 @@
 package com.accountingapp.integration;
 
 import com.accountingapp.BaseClass;
+import com.accountingapp.dto.UserDTO;
 import com.accountingapp.model.User;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.apache.http.HttpResponse;
@@ -22,7 +23,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
-import static com.accountingapp.factory.UserFactory.getAllPopulatedUsers;
+import static com.accountingapp.factory.UserFactory.getAllPopulatedUsersDTO;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -39,33 +40,21 @@ public class UserApiIntegration extends BaseClass {
         assertThat(response.getStatusLine().getStatusCode()).isEqualTo(200);
         //check the content
         String jsonString = EntityUtils.toString(response.getEntity());
-        List<User> users = mapper.readValue(jsonString, new TypeReference<List<User>>(){});
+        List<UserDTO> users = mapper.readValue(jsonString, new TypeReference<List<UserDTO>>(){});
 
         assertThat(users).hasSize(7);
 
-        List<User> testActiveUsers = new ArrayList<>(getAllPopulatedUsers());
+        List<UserDTO> testActiveUsers = new ArrayList<>(getAllPopulatedUsersDTO());
 
-//      Ignored Inactive User from Response
-        testActiveUsers.remove(7);
-
-        assertThat(users).extracting("userId").containsExactly(testActiveUsers.stream().map(User::getUserId).toArray());
-        assertThat(users).extracting("userName").containsExactly(testActiveUsers.stream().map(User::getUserName).toArray());
-        assertThat(users).extracting("emailAddress").containsExactly(testActiveUsers.stream().map(User::getEmailAddress).toArray());
+        assertThat(users).extracting("userId").containsExactly(testActiveUsers.stream().map(UserDTO::getUserId).toArray());
+        assertThat(users).extracting("userName").containsExactly(testActiveUsers.stream().map(UserDTO::getUserName).toArray());
+        assertThat(users).extracting("emailAddress").containsExactly(testActiveUsers.stream().map(UserDTO::getEmailAddress).toArray());
         assertThat(users).extracting("modifiedOn").containsOnlyNulls();
 
-        Optional<Timestamp> timestamp = users.stream().map(User::getCreatedOn).sorted().findFirst();
+        Optional<Timestamp> timestamp = users.stream().map(UserDTO::getCreatedOn).sorted().findFirst();
         timestamp.ifPresent(timestamp1 ->  assertThat(timestamp1).isToday());
 
         assertThat(users).extracting("modifiedOn").containsOnlyNulls();
-    }
-
-    @Test
-    public void testGetUserById_Fail_400() throws IOException, URISyntaxException {
-        URI uri = builder.setPath("/users/0").build();
-        HttpGet request = new HttpGet(uri);
-        HttpResponse response = client.execute(request);
-
-        assertThat(response.getStatusLine().getStatusCode()).isEqualTo(400);
     }
 
     @Test
@@ -209,7 +198,7 @@ public class UserApiIntegration extends BaseClass {
 
         //check the content
         String jsonString = EntityUtils.toString(response.getEntity());
-        User user = mapper.readValue(jsonString, User.class);
+        UserDTO user = mapper.readValue(jsonString, UserDTO.class);
 
         assertThat(user.getUserId()).isEqualTo(9L);
         assertThat(user.getUserName()).isEqualTo("newUser");

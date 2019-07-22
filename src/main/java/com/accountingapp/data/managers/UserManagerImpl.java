@@ -1,5 +1,6 @@
 package com.accountingapp.data.managers;
 
+import com.accountingapp.dto.UserDTO;
 import com.accountingapp.enums.Status;
 import com.accountingapp.exception.DBException;
 import com.accountingapp.model.User;
@@ -65,9 +66,10 @@ public class UserManagerImpl implements UserManager {
     
     /**
      * Create User
+     * @param user
      */
     @Override
-    public User createUser(User user) {
+    public User createUser(UserDTO user) {
         try(Connection connection = getConnection()) {
             QueryRunner runner = new QueryRunner();
             long userId =  runner.insert(connection, SQL_INSERT_USER, new BeanHandler<>(User.class), user.getUserName(),
@@ -85,7 +87,7 @@ public class UserManagerImpl implements UserManager {
     /**
      * Update User
      */
-    public int updateUser(Long userId,User user) {
+    public int updateUser(Long userId, UserDTO user) {
         try(Connection connection = getConnection()) {
             return new QueryRunner().update(connection, SQL_UPDATE_USER, user.getUserName(), user.getEmailAddress(),
                     new Timestamp(System.currentTimeMillis()), userId);

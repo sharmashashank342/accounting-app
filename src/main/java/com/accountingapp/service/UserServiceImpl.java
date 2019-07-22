@@ -1,9 +1,11 @@
 package com.accountingapp.service;
 
 import com.accountingapp.data.managers.UserManager;
+import com.accountingapp.dto.UserDTO;
 import com.accountingapp.enums.Status;
 import com.accountingapp.exception.InvalidUserIdException;
 import com.accountingapp.model.User;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.ws.rs.core.Response;
 import java.util.List;
@@ -23,11 +25,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAllUsers() {
+    public List<UserDTO> getAllUsers() {
         return userManager
                 .getAllUsers()
                 .stream()
                 .filter(activeUsers)
+                .map(this::convertToUserDTO)
                 .collect(toList());
     }
 
@@ -44,12 +47,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User createUser(User user) {
-        return userManager.createUser(user);
+    public UserDTO createUser(UserDTO user) {
+        return Optional.of(userManager.createUser(user))
+                .map(this::convertToUserDTO)
+                .get();
     }
-    
+
+    private UserDTO convertToUserDTO(User user) {
+        return new ObjectMapper().convertValue(user, UserDTO.class);
+    }
+
     @Override
-    public void updateUser(long userId, User user) {
+    public void updateUser(long userId, UserDTO user) {
         int updateCount = userManager.updateUser(userId, user);
         if (updateCount != 1) {
             throw new InvalidUserIdException(userId, Response.Status.NOT_FOUND.getStatusCode());

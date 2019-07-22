@@ -1,9 +1,11 @@
 package com.accountingapp.controller;
 
 import com.accountingapp.configuration.Context;
+import com.accountingapp.dto.AccountDTO;
+import com.accountingapp.dto.CreateAccountParams;
+import com.accountingapp.dto.UserDTO;
 import com.accountingapp.events.service.EventService;
 import com.accountingapp.exception.InvalidRequestException;
-import com.accountingapp.exception.InvalidUserIdException;
 import com.accountingapp.model.Account;
 import com.accountingapp.model.CreateTransactionRequest;
 import com.accountingapp.model.Transactions;
@@ -16,7 +18,6 @@ import com.accountingapp.utils.Utils;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -44,17 +45,24 @@ public class RestController {
     @POST
     @Path("/accounts")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Account createAccount(Account account) {
+    public AccountDTO createAccount(CreateAccountParams accountParams) {
 
-        validateAccountCreationParam(account);
+        validateAccountCreationParam(accountParams);
 
         // User Status active check in DB also
-        userService.getUserById(account.getUserId());
+        userService.getUserById(accountParams.getUserId());
 
-        return accountService.createAccount(account);
+        return accountService.createAccount(buildAccountDTO(accountParams));
     }
 
-    private void validateAccountCreationParam(Account account) {
+    private AccountDTO buildAccountDTO(CreateAccountParams accountParams) {
+        AccountDTO account = new AccountDTO();
+        account.setUserId(accountParams.getUserId());
+        account.setCurrencyCode(accountParams.getCurrencyCode());
+        return account;
+    }
+
+    private void validateAccountCreationParam(CreateAccountParams account) {
 
         if (account.getUserId() == 0)
             throw new InvalidRequestException("Invalid User Id");
@@ -63,9 +71,6 @@ public class RestController {
             account.setCurrencyCode(AmountUtil.DEFAULT_CURRENCY);
         else if (!AmountUtil.validateCurrencyCode(account.getCurrencyCode()))
             throw new InvalidRequestException("Invalid Currency Code");
-
-        if (Objects.nonNull(account.getBalance()) && account.getBalance().compareTo(BigDecimal.ZERO) != 0)
-            throw new InvalidRequestException("Account Balance should be 0 for New Accounts");
 
     }
 
@@ -87,40 +92,38 @@ public class RestController {
 
     @GET
     @Path("/users")
-    public List<User> getAllUsers() {
+    public List<UserDTO> getAllUsers() {
         return userService.getAllUsers();
     }
 
     @GET
     @Path("/users/{userId}")
     public User getUserById(@PathParam("userId") long userId) {
-        if (userId == 0)
-            throw new InvalidUserIdException(userId);
         return userService.getUserById(userId);
     }
 
     @POST
     @Path("/users")
-    public User createUser(User user) {
+    public UserDTO createUser(UserDTO user) {
 
         validateUserCreationParam(user);
 
         return userService.createUser(user);
     }
 
-    private void validateUserCreationParam(User user) {
+    private void validateUserCreationParam(UserDTO user) {
 
         if (Objects.isNull(user.getUserName()) || user.getUserName().trim().isEmpty())
             throw new InvalidRequestException("Username is Invalid");
 
         if (Objects.isNull(user.getEmailAddress()) || user.getEmailAddress().trim().isEmpty() ||
-                Utils.isNotValid(user.getEmailAddress()))
+                Utils.isEmailInvalid(user.getEmailAddress()))
             throw new InvalidRequestException("Email is Invalid");
     }
 
     @PUT
     @Path("/users/{userId}")
-    public Response updateUser(@PathParam("userId") long userId, User user) {
+    public Response updateUser(@PathParam("userId") long userId, UserDTO user) {
 
         userService.updateUser(userId, user);
 

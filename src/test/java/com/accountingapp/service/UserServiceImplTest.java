@@ -1,9 +1,11 @@
 package com.accountingapp.service;
 
 import com.accountingapp.data.managers.UserManager;
+import com.accountingapp.dto.UserDTO;
 import com.accountingapp.enums.Status;
 import com.accountingapp.exception.InvalidUserIdException;
 import com.accountingapp.model.User;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -15,10 +17,11 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.List;
 
-import static com.accountingapp.factory.UserFactory.getDummyActiveUsers;
-import static com.accountingapp.factory.UserFactory.getDummyUsers;
+import static com.accountingapp.factory.UserFactory.*;
 import static java.util.Collections.emptyList;
+import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.verify;
@@ -31,7 +34,7 @@ public class UserServiceImplTest {
     private UserManager userManager;
 
     @Captor
-    private ArgumentCaptor<User> userArgumentCaptor;
+    private ArgumentCaptor<UserDTO> userArgumentCaptor;
 
     @InjectMocks
     private UserService userService = new UserServiceImpl(userManager);
@@ -67,9 +70,15 @@ public class UserServiceImplTest {
         Timestamp createdOn = Timestamp.valueOf(LocalDateTime.now().minusWeeks(1));
         Timestamp modifiedOn = new Timestamp(System.currentTimeMillis());
 
+        List<User> users = getDummyUsers(createdOn, modifiedOn);
+        List<UserDTO> userDTOS = users.stream()
+                .filter(user -> user.getStatus() == Status.ACTIVE)
+                .map(user -> new ObjectMapper().convertValue(user, UserDTO.class))
+                .collect(toList());
+
         when(userManager.getAllUsers()).thenReturn(getDummyUsers(createdOn, modifiedOn));
 
-        assertThat(userService.getAllUsers()).hasSize(4).isEqualTo(getDummyActiveUsers(createdOn, modifiedOn));
+        assertThat(userService.getAllUsers()).hasSize(4).isEqualTo(userDTOS);
 
         verify(userManager).getAllUsers();
     }
@@ -124,14 +133,15 @@ public class UserServiceImplTest {
 
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         User user = getDummyUsers(timestamp, timestamp).get(0);
+        UserDTO userDTO = getDummyUsersDTO(timestamp, timestamp).get(0);
 
-        when(userManager.createUser(any(User.class))).thenReturn(user);
+        when(userManager.createUser(any(UserDTO.class))).thenReturn(user);
 
-        assertThat(userService.createUser(user)).isEqualTo(user);
+        assertThat(userService.createUser(userDTO)).isEqualToComparingFieldByField(user);
 
         verify(userManager).createUser(userArgumentCaptor.capture());
 
-        assertThat(userArgumentCaptor.getValue()).isEqualTo(user);
+        assertThat(userArgumentCaptor.getValue()).isEqualToIgnoringGivenFields(user, "status");
     }
 
     @Test
@@ -139,10 +149,11 @@ public class UserServiceImplTest {
 
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         User user = getDummyUsers(timestamp, timestamp).get(0);
+        UserDTO userDTO = getDummyUsersDTO(timestamp, timestamp).get(0);
 
-        when(userManager.updateUser(anyLong(), any(User.class))).thenReturn(0);
+        when(userManager.updateUser(anyLong(), any(UserDTO.class))).thenReturn(0);
 
-        Throwable throwable = catchThrowable(() -> userService.updateUser(2L, user));
+        Throwable throwable = catchThrowable(() -> userService.updateUser(2L, userDTO));
 
         assertThat(throwable).isInstanceOf(InvalidUserIdException.class)
                 .hasFieldOrPropertyWithValue("statusCode", 404)
@@ -150,7 +161,7 @@ public class UserServiceImplTest {
 
         verify(userManager).updateUser(eq(2L), userArgumentCaptor.capture());
 
-        assertThat(userArgumentCaptor.getValue()).isEqualTo(user);
+        assertThat(userArgumentCaptor.getValue()).isEqualToIgnoringGivenFields(user, "status");
     }
 
     @Test
@@ -158,14 +169,15 @@ public class UserServiceImplTest {
 
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         User user = getDummyUsers(timestamp, timestamp).get(0);
+        UserDTO userDTO = getDummyUsersDTO(timestamp, timestamp).get(0);
 
-        when(userManager.updateUser(anyLong(), any(User.class))).thenReturn(1);
+        when(userManager.updateUser(anyLong(), any(UserDTO.class))).thenReturn(1);
 
-        userService.updateUser(2, user);
+        userService.updateUser(2, userDTO);
 
-        verify(userManager).updateUser(eq(2l), userArgumentCaptor.capture());
+        verify(userManager).updateUser(eq(2L), userArgumentCaptor.capture());
 
-        assertThat(userArgumentCaptor.getValue()).isEqualTo(user);
+        assertThat(userArgumentCaptor.getValue()).isEqualToIgnoringGivenFields(user, "status");
     }
 
     @Test

@@ -1,7 +1,9 @@
 package com.accountingapp.factory;
 
+import com.accountingapp.dto.UserDTO;
 import com.accountingapp.enums.Status;
 import com.accountingapp.model.User;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -48,5 +50,32 @@ public class UserFactory {
         users.add(new User(8L, "non_active", "non_active@gmail.com", Status.INACTIVE, timestamp, timestamp));
 
         return users;
+    }
+
+    public static List<UserDTO> getAllPopulatedUsersDTO() {
+
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+
+        List<UserDTO> users = new ArrayList<>(6);
+
+        users.add(new UserDTO(1L, "shashank", "shashank@gmail.com", timestamp, null));
+        users.add(new UserDTO(2L, "arun", "arun@gmail.com", timestamp, null));
+        users.add(new UserDTO(3L, "ravi", "ravi@gmail.com", timestamp, null));
+        users.add(new UserDTO(4L, "ali", "ali@gmail.com", timestamp, null));
+        users.add(new UserDTO(5L, "sachin", "sachin@gmail.com", timestamp, null));
+        users.add(new UserDTO(6L, "virat", "virat@gmail.com", timestamp, null));
+        users.add(new UserDTO(7L, "non_account_user", "non_account_user@gmail.com", timestamp, null));
+
+        return users;
+    }
+
+    public static List<UserDTO> getDummyUsersDTO(Timestamp createdOn, Timestamp modifiedOn) {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        return getDummyUsers(createdOn, modifiedOn)
+                .stream()
+                .map(user -> objectMapper.convertValue(user, UserDTO.class))
+                .collect(toList());
     }
 }

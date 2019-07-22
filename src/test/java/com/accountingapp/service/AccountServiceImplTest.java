@@ -1,6 +1,7 @@
 package com.accountingapp.service;
 
 import com.accountingapp.data.managers.AccountsManager;
+import com.accountingapp.dto.AccountDTO;
 import com.accountingapp.enums.Status;
 import com.accountingapp.exception.InvalidAccountIdException;
 import com.accountingapp.exception.InvalidUserIdException;
@@ -14,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static com.accountingapp.factory.AccountFactory.getDummyAccount;
+import static com.accountingapp.factory.AccountFactory.getDummyAccountDTO;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
@@ -27,7 +29,7 @@ public class AccountServiceImplTest {
     private AccountsManager accountsManager;
 
     @Captor
-    private ArgumentCaptor<Account> accountArgumentCaptor;
+    private ArgumentCaptor<AccountDTO> accountArgumentCaptor;
 
     @InjectMocks
     private AccountService accountService = new AccountServiceImpl(accountsManager);
@@ -84,14 +86,15 @@ public class AccountServiceImplTest {
 
         Account account = getDummyAccount();
 
-        when(accountsManager.createAccount(any(Account.class)))
+        when(accountsManager.createAccount(any(AccountDTO.class)))
                 .thenReturn(account);
 
-        assertThat(accountService.createAccount(account)).isEqualTo(account);
+        assertThat(accountService.createAccount(getDummyAccountDTO())).isEqualToIgnoringGivenFields(account, "balance");
+        assertThat(getDummyAccountDTO().getBalance().compareTo(account.getBalance())).isZero();
 
         verify(accountsManager).createAccount(accountArgumentCaptor.capture());
 
-        assertThat(accountArgumentCaptor.getValue()).isEqualTo(account);
+        assertThat(accountArgumentCaptor.getValue()).isEqualToComparingFieldByField(account);
     }
 
     @Test

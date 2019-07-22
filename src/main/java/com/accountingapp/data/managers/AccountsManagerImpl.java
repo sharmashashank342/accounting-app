@@ -1,5 +1,6 @@
 package com.accountingapp.data.managers;
 
+import com.accountingapp.dto.AccountDTO;
 import com.accountingapp.enums.Status;
 import com.accountingapp.enums.TransactionEntryType;
 import com.accountingapp.enums.TransactionServiceType;
@@ -53,7 +54,7 @@ public class AccountsManagerImpl implements AccountsManager {
 	 * Create account
 	 */
 	@Override
-	public Account createAccount(Account account) {
+	public Account createAccount(AccountDTO account) {
 		try(Connection connection = getConnection()) {
 			QueryRunner runner = new QueryRunner();
 			Account newAccount = runner.insert(connection, SQL_CREATE_ACC, new BeanHandler<>(Account.class), account.getUserId(),

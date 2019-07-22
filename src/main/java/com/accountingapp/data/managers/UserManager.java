@@ -1,5 +1,6 @@
 package com.accountingapp.data.managers;
 
+import com.accountingapp.dto.UserDTO;
 import com.accountingapp.model.User;
 
 import java.util.List;
@@ -10,9 +11,9 @@ public interface UserManager {
 
 	User getUserById(long userId);
 
-	User createUser(User user);
+	User createUser(UserDTO user);
 
-	int updateUser(Long userId, User user);
+	int updateUser(Long userId, UserDTO user);
 
 	int deleteUser(long userId);
 

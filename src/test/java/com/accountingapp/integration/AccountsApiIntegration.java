@@ -1,6 +1,8 @@
 package com.accountingapp.integration;
 
 import com.accountingapp.BaseClass;
+import com.accountingapp.dto.AccountDTO;
+import com.accountingapp.dto.CreateAccountParams;
 import com.accountingapp.model.Account;
 import com.accountingapp.model.CreateTransactionRequest;
 import com.accountingapp.model.Transactions;
@@ -79,7 +81,7 @@ public class AccountsApiIntegration extends BaseClass {
         request.setHeader("Accept", "application/json");
         request.setHeader("Content-type", "application/json");
 
-        Account account = new Account();
+        CreateAccountParams account = new CreateAccountParams();
         account.setUserId(10L);
         account.setCurrencyCode(AmountUtil.DEFAULT_CURRENCY);
 
@@ -117,7 +119,7 @@ public class AccountsApiIntegration extends BaseClass {
         request.setHeader("Accept", "application/json");
         request.setHeader("Content-type", "application/json");
 
-        Account accountRequest = new Account();
+        CreateAccountParams accountRequest = new CreateAccountParams();
         accountRequest.setUserId(7L);
         accountRequest.setCurrencyCode(AmountUtil.DEFAULT_CURRENCY);
 
@@ -130,7 +132,7 @@ public class AccountsApiIntegration extends BaseClass {
 
         //check the content
         String jsonString = EntityUtils.toString(response.getEntity());
-        Account account = mapper.readValue(jsonString, Account.class);
+        AccountDTO account = mapper.readValue(jsonString, AccountDTO.class);
         assertThat(account.getUserId()).isEqualTo(7L);
         assertThat(setDisplayAmount(account.getBalance())).isEqualTo(setDisplayAmount(BigDecimal.ZERO));
         assertThat(account.getCurrencyCode()).isEqualTo("INR");

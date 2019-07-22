@@ -1,18 +1,19 @@
 package com.accountingapp.service;
 
+import com.accountingapp.dto.UserDTO;
 import com.accountingapp.model.User;
 
 import java.util.List;
 
 public interface UserService {
 
-    List<User> getAllUsers();
+    List<UserDTO> getAllUsers();
 
     User getUserById(long userId);
 
-    User createUser(User user);
+    UserDTO createUser(UserDTO user);
 
-    void updateUser(long userId, User user);
+    void updateUser(long userId, UserDTO user);
 
     void deleteUser(long userId);
 }

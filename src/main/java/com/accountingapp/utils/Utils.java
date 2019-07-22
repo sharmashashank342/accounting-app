@@ -58,7 +58,7 @@ public class Utils {
         return value;
     }
 
-    public static boolean isNotValid(String email) {
+    public static boolean isEmailInvalid(String email) {
         return !email.matches(EMAIL_REGEX);
     }
 

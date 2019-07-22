@@ -5,6 +5,8 @@ import com.accountingapp.data.H2DBManager;
 import com.accountingapp.data.managers.AccountsManager;
 import com.accountingapp.data.managers.AccountsManagerImpl;
 import com.accountingapp.data.managers.UserManagerImpl;
+import com.accountingapp.dto.AccountDTO;
+import com.accountingapp.dto.UserDTO;
 import com.accountingapp.enums.Status;
 import com.accountingapp.enums.TransactionServiceType;
 import com.accountingapp.exception.BaseException;
@@ -75,12 +77,11 @@ public class AccountsManagerImplTest {
     @Test
     public void test_createAccount_Throws_DBException() {
 
-        Account account = new Account();
+        AccountDTO account = new AccountDTO();
         // user Account already exist
         account.setUserId(1L);
         account.setCurrencyCode("USD");
         account.setBalance(BigDecimal.ZERO);
-        account.setStatus(Status.ACTIVE);
         account.setCreatedOn(new Timestamp(System.currentTimeMillis()));
 
         Throwable throwable = catchThrowable(() -> accountsManager.createAccount(account));
@@ -92,12 +93,11 @@ public class AccountsManagerImplTest {
     @Test
     public void test_createAccount_Throws_DBException_When_No_User() {
 
-        Account account = new Account();
+        AccountDTO account = new AccountDTO();
         // user not exists by id
         account.setUserId(10L);
         account.setCurrencyCode("USD");
         account.setBalance(BigDecimal.ZERO);
-        account.setStatus(Status.ACTIVE);
         account.setCreatedOn(new Timestamp(System.currentTimeMillis()));
 
         Throwable throwable = catchThrowable(() -> accountsManager.createAccount(account));
@@ -110,22 +110,20 @@ public class AccountsManagerImplTest {
     public void test_createAccount() {
 
 
-        User user = new User();
-        user.setStatus(Status.ACTIVE);
+        UserDTO user = new UserDTO();
         user.setEmailAddress("sometestemail@gmail.com");
         user.setUserName("username");
         user.setCreatedOn(new Timestamp(System.currentTimeMillis()));
-        user = new UserManagerImpl().createUser(user);
+        User userEntity = new UserManagerImpl().createUser(user);
 
-        Account account = new Account();
-        account.setUserId(user.getUserId());
+        AccountDTO account = new AccountDTO();
+        account.setUserId(userEntity.getUserId());
         account.setCurrencyCode("USD");
         account.setBalance(BigDecimal.ZERO);
-        account.setStatus(Status.ACTIVE);
         account.setCreatedOn(new Timestamp(System.currentTimeMillis()));
 
         Account newAccount = accountsManager.createAccount(account);
-        assertThat(newAccount).isEqualToIgnoringGivenFields(account, "createdOn", "accountId", "balance");
+        assertThat(newAccount).isEqualToIgnoringGivenFields(account, "createdOn", "accountId", "balance", "status");
         assertThat(newAccount.getAccountId()).isEqualTo(8L);
         assertThat(setDisplayAmount(newAccount.getBalance())).isEqualTo(setDisplayAmount(account.getBalance()));
         assertThat(newAccount.getCreatedOn()).isToday();
