@@ -3,7 +3,6 @@ package com.accountingapp.datamanager;
 import com.accountingapp.data.DBManager;
 import com.accountingapp.data.H2DBManager;
 import com.accountingapp.data.managers.UserManager;
-import com.accountingapp.data.managers.UserManagerImpl;
 import com.accountingapp.dto.UserDTO;
 import com.accountingapp.enums.Status;
 import com.accountingapp.model.User;
@@ -18,7 +17,7 @@ import java.util.Optional;
 import static com.accountingapp.factory.UserFactory.getAllPopulatedUsers;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class UserManagerImplTest {
+public class UserManagerTest {
 
     private static DBManager h2Dbmanager;
     private UserManager userManager;
@@ -31,7 +30,7 @@ public class UserManagerImplTest {
     @Before
     public void setup() {
         h2Dbmanager.populateTestData();
-        userManager = new UserManagerImpl();
+        userManager = new UserManager();
     }
 
     @Test

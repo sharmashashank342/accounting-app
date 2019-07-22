@@ -3,8 +3,7 @@ package com.accountingapp.datamanager;
 import com.accountingapp.data.DBManager;
 import com.accountingapp.data.H2DBManager;
 import com.accountingapp.data.managers.AccountsManager;
-import com.accountingapp.data.managers.AccountsManagerImpl;
-import com.accountingapp.data.managers.UserManagerImpl;
+import com.accountingapp.data.managers.UserManager;
 import com.accountingapp.dto.AccountDTO;
 import com.accountingapp.dto.UserDTO;
 import com.accountingapp.enums.Status;
@@ -36,9 +35,9 @@ import static com.accountingapp.utils.AmountUtil.setDisplayAmount;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
-public class AccountsManagerImplTest {
+public class AccountsManagerTest {
 
-    private static Logger log = Logger.getLogger(AccountsManagerImplTest.class);
+    private static Logger log = Logger.getLogger(AccountsManagerTest.class);
 
     private static final int THREADS_COUNT = 100;
 
@@ -53,7 +52,7 @@ public class AccountsManagerImplTest {
     @Before
     public void setup() {
         h2Dbmanager.populateTestData();
-        accountsManager = new AccountsManagerImpl();
+        accountsManager = new AccountsManager();
     }
 
     @Test
@@ -114,7 +113,7 @@ public class AccountsManagerImplTest {
         user.setEmailAddress("sometestemail@gmail.com");
         user.setUserName("username");
         user.setCreatedOn(new Timestamp(System.currentTimeMillis()));
-        User userEntity = new UserManagerImpl().createUser(user);
+        User userEntity = new UserManager().createUser(user);
 
         AccountDTO account = new AccountDTO();
         account.setUserId(userEntity.getUserId());

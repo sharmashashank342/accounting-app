@@ -19,16 +19,18 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
-import static com.accountingapp.factory.UserFactory.*;
+import static com.accountingapp.factory.UserFactory.getDummyUsers;
+import static com.accountingapp.factory.UserFactory.getDummyUsersDTO;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class UserServiceImplTest {
+public class UserServiceTest {
 
     @Mock
     private UserManager userManager;
@@ -37,7 +39,7 @@ public class UserServiceImplTest {
     private ArgumentCaptor<UserDTO> userArgumentCaptor;
 
     @InjectMocks
-    private UserService userService = new UserServiceImpl(userManager);
+    private UserService userService = new UserService(userManager);
 
     @Test
     public void test_getAllUsers_Returns_EmptyList() {

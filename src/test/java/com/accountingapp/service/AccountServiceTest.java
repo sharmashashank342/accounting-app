@@ -23,7 +23,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class AccountServiceImplTest {
+public class AccountServiceTest {
 
     @Mock
     private AccountsManager accountsManager;
@@ -32,7 +32,7 @@ public class AccountServiceImplTest {
     private ArgumentCaptor<AccountDTO> accountArgumentCaptor;
 
     @InjectMocks
-    private AccountService accountService = new AccountServiceImpl(accountsManager);
+    private AccountService accountService = new AccountService(accountsManager);
 
     @Test
     public void test_getAccount_Throws_InvalidAccountIdException_Not_Found() {

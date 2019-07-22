@@ -9,9 +9,7 @@ import com.accountingapp.events.publisher.EventPublisher;
 import com.accountingapp.events.service.EventService;
 import com.accountingapp.events.service.EventServiceImpl;
 import com.accountingapp.service.AccountService;
-import com.accountingapp.service.AccountServiceImpl;
 import com.accountingapp.service.UserService;
-import com.accountingapp.service.UserServiceImpl;
 import lombok.Getter;
 import org.apache.log4j.Logger;
 
@@ -47,10 +45,10 @@ public class Context {
     protected Context() {
         context = this;
         dbManager = new H2DBManager();
-        accountsManager = dbManager.getAccountsManager();
-        userManager = dbManager.getUserManager();
-        accountService = new AccountServiceImpl(accountsManager);
-        userService = new UserServiceImpl(userManager);
+        accountsManager = new AccountsManager();
+        userManager = new UserManager();
+        accountService = new AccountService(accountsManager);
+        userService = new UserService(userManager);
 
         userEventListener = new UserEventListener(accountsManager);
         // can register more events to publisher

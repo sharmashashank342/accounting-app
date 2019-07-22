@@ -1,9 +1,5 @@
 package com.accountingapp.data;
 
-import com.accountingapp.data.managers.AccountsManager;
-import com.accountingapp.data.managers.AccountsManagerImpl;
-import com.accountingapp.data.managers.UserManager;
-import com.accountingapp.data.managers.UserManagerImpl;
 import com.accountingapp.exception.DBException;
 import org.apache.commons.dbutils.DbUtils;
 import org.h2.tools.RunScript;
@@ -25,28 +21,13 @@ public class H2DBManager implements DBManager {
 
 	private final String TEST_DATA_SQL_FILE = "src/test/resources/data.sql";
 
-	private UserManager userDataManager = null;
-	private AccountsManagerImpl accountDataManager = null;
-
 	public H2DBManager() {
 		DbUtils.loadDriver(h2Driver);
-		userDataManager = new UserManagerImpl();
-		accountDataManager = new AccountsManagerImpl();
 	}
 
 	public static Connection getConnection() throws SQLException {
 		return DriverManager.getConnection(h2ConnectionUrl, h2User, h2Password);
 
-	}
-
-	@Override
-	public UserManager getUserManager() {
-		return userDataManager;
-	}
-
-	@Override
-	public AccountsManager getAccountsManager() {
-		return accountDataManager;
 	}
 
 	@Override

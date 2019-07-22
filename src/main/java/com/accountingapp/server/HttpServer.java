@@ -2,7 +2,7 @@ package com.accountingapp.server;
 
 import com.accountingapp.controller.RestController;
 import com.accountingapp.exception.ServiceExceptionMapper;
-import com.accountingapp.service.UserServiceImpl;
+import com.accountingapp.service.UserService;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -28,7 +28,7 @@ public class HttpServer {
         jerseyServlet.setInitOrder(0);
 
         jerseyServlet.setInitParameter("jersey.config.server.provider.classnames", RestController.class.getCanonicalName() + "," +
-                        UserServiceImpl.class.getCanonicalName()  + "," +
+                        UserService.class.getCanonicalName()  + "," +
                 ServiceExceptionMapper.class.getCanonicalName());
 
         try {
