@@ -3,6 +3,7 @@ package com.accountingapp.integration;
 import com.accountingapp.BaseClass;
 import com.accountingapp.dto.AccountDTO;
 import com.accountingapp.dto.CreateAccountParams;
+import com.accountingapp.exception.InvalidRequestException;
 import com.accountingapp.model.Account;
 import com.accountingapp.model.CreateTransactionRequest;
 import com.accountingapp.model.Transactions;
@@ -248,6 +249,43 @@ public class AccountsApiIntegration extends BaseClass {
         request.setEntity(entity);
         HttpResponse response = client.execute(request);
         assertThat(response.getStatusLine().getStatusCode()).isEqualTo(400);
+    }
 
+    @Test
+    public void testTransactions_Fail_Amount_Not_Valid() throws IOException, URISyntaxException {
+        URI uri = builder.setPath("/transactions").build();
+        BigDecimal amount = BigDecimal.valueOf(-1);
+        CreateTransactionRequest transaction = new CreateTransactionRequest(amount, 3L, 4L);
+
+        String jsonInString = mapper.writeValueAsString(transaction);
+        StringEntity entity = new StringEntity(jsonInString, ContentType.APPLICATION_JSON);
+        HttpPost request = new HttpPost(uri);
+        request.setHeader("Accept", "application/json");
+        request.setHeader("Content-type", "application/json");
+        request.setEntity(entity);
+        HttpResponse response = client.execute(request);
+
+        assertThat(response.getStatusLine().getStatusCode()).isEqualTo(400);
+        InvalidRequestException exception = mapper.readValue(EntityUtils.toString(response.getEntity()), InvalidRequestException.class);
+        assertThat(exception.getMessage()).isEqualTo("Amount should be non negitive");
+    }
+
+    @Test
+    public void testTransactions_Fail_Same_Account() throws IOException, URISyntaxException {
+        URI uri = builder.setPath("/transactions").build();
+        BigDecimal amount = BigDecimal.valueOf(10);
+        CreateTransactionRequest transaction = new CreateTransactionRequest(amount, 3L, 3L);
+
+        String jsonInString = mapper.writeValueAsString(transaction);
+        StringEntity entity = new StringEntity(jsonInString, ContentType.APPLICATION_JSON);
+        HttpPost request = new HttpPost(uri);
+        request.setHeader("Accept", "application/json");
+        request.setHeader("Content-type", "application/json");
+        request.setEntity(entity);
+        HttpResponse response = client.execute(request);
+
+        assertThat(response.getStatusLine().getStatusCode()).isEqualTo(400);
+        InvalidRequestException exception = mapper.readValue(EntityUtils.toString(response.getEntity()), InvalidRequestException.class);
+        assertThat(exception.getMessage()).isEqualTo("Can't initiate Txn for same Accounts");
     }
 }

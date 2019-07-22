@@ -17,6 +17,7 @@ import com.accountingapp.utils.Utils;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -153,6 +154,14 @@ public class RestController {
     @POST
     @Path("/transactions")
     public Transactions createAccountTransfer(CreateTransactionRequest transactionRequest) {
+
+        if (transactionRequest.getAmount().signum() <= 0) {
+            throw new InvalidRequestException("Amount should be non negitive");
+        }
+
+        if (transactionRequest.getReceiverAccountId().equals(transactionRequest.getSenderAccountId())) {
+            throw new InvalidRequestException("Can't initiate Txn for same Accounts");
+        }
 
         AccountDTO fromAccount = accountService.getAccountById(transactionRequest.getSenderAccountId());
 
