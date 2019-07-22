@@ -18,8 +18,8 @@ import org.junit.Before;
 
 
 public abstract class BaseClass {
-    private static Server server = null;
 
+    private static Server server = null;
     protected HttpClient client ;
     private static DBManager h2Dbmanager;
     protected URIBuilder builder = new URIBuilder().setScheme("http").setHost("localhost:8889");
@@ -34,11 +34,10 @@ public abstract class BaseClass {
 
     @Before
     public void setup() throws Exception {
-        // Initilize Server
+        // Initilize Test Data and Server
         h2Dbmanager.populateData();
         startServer();
         client = HttpClients.custom().build();
-
     }
 
     @After
