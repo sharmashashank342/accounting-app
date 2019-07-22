@@ -44,6 +44,7 @@ public class Context {
 
     protected Context() {
         context = this;
+        // Can Check Test Context Instance and Change DBManager Implementation
         dbManager = new H2DBManager();
         accountsManager = new AccountsManager();
         userManager = new UserManager();
