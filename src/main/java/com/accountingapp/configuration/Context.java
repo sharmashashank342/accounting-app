@@ -35,7 +35,7 @@ public class Context {
     // In App Event Publisher
     private final EventPublisher eventPublisher;
 
-    // In App Event Listener,
+    // In App Event Listener
     private final UserEventListener userEventListener;
 
     private final EventService eventService;
